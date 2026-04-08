@@ -19,24 +19,25 @@ function fn() {
     domain: 'demoblaze.com',
     readTimeout: 5000,
     connectTimeout: 5000,
-    // Shared state between feature files
     sharedTestEmail: null,
     sharedTestPassword: null
   };
 
-  // System properties have highest priority
   if (karate.properties['baseUrl']) config.baseUrl = karate.properties['baseUrl'];
   if (karate.properties['readTimeout']) config.readTimeout = karate.properties['readTimeout'];
   if (karate.properties['connectTimeout']) config.connectTimeout = karate.properties['connectTimeout'];
 
-  // Configure Karate with timeouts from config
   karate.configure('readTimeout', config.readTimeout);
   karate.configure('connectTimeout', config.connectTimeout);
 
-  // Helper functions for data generation
+  config.getRandomEmail = function() {
+    var ts = java.lang.System.currentTimeMillis();
+    var rnd = Math.floor(Math.random() * 10000);
+    return 'testuser' + ts + rnd + '@test.com';
+  };
+
   config.randomEmail = function() {
-    var uuid = java.util.UUID.randomUUID().toString();
-    return 'test-' + uuid + '@automationexercise.com';
+    return config.getRandomEmail();
   };
 
   config.testUserData = function(email) {

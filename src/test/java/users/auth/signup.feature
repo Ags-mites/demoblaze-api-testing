@@ -9,9 +9,6 @@ Feature: Demoblaze API - Signup and Login Testing
     * def getRandomEmail = function() { var ts = java.lang.System.currentTimeMillis(); var rnd = Math.floor(Math.random() * 10000); return 'testuser' + ts + rnd + '@test.com'; }
     * def testPassword = 'TestPass123'
 
-  # ============================================================
-  # CASO 1: Crear un nuevo usuario en signup
-  # ============================================================
   @signup @new-user @critical
   Scenario: CASO 1 - Crear un nuevo usuario exitosamente
     * def newEmail = getRandomEmail()
@@ -36,12 +33,8 @@ Feature: Demoblaze API - Signup and Login Testing
     * print 'Message: ' + responseMessage1
     * print '═══════════════════════════════════════\n'
 
-  # ============================================================
-  # CASO 2: Intentar crear usuario ya existente (duplicado)
-  # ============================================================
   @signup @duplicate-user @critical
   Scenario: CASO 2 - Intentar crear usuario duplicado
-    # First, create a user
     * def duplicateEmail = getRandomEmail()
     * def firstPayload = { username: duplicateEmail, password: testPassword }
     * karate.log('Creating first user with email: ' + duplicateEmail)
@@ -51,9 +44,7 @@ Feature: Demoblaze API - Signup and Login Testing
     When method POST
     Then status 200
     * def firstResponse = response
-    * karate.log('First user created, attempting duplicate...')
     
-    # Now try to create the same user again
     Given url baseUrl + signupPath
     * def duplicatePayload = { username: duplicateEmail, password: testPassword }
     And request duplicatePayload
@@ -71,12 +62,8 @@ Feature: Demoblaze API - Signup and Login Testing
     * print 'Segundo intento - Message: ' + duplicateResponse.message
     * print '═══════════════════════════════════════\n'
 
-  # ============================================================
-  # CASO 3: Login con usuario y password correcto
-  # ============================================================
   @login @valid-credentials @critical
   Scenario: CASO 3 - Login con credenciales válidas
-    # First, create a valid user
     * def validEmail = getRandomEmail()
     * def validPassword = 'ValidPass123'
     * def createPayload = { username: validEmail, password: validPassword }
@@ -86,9 +73,7 @@ Feature: Demoblaze API - Signup and Login Testing
     And request createPayload
     When method POST
     Then status 200
-    * karate.log('User created, now testing login...')
     
-    # Now login with correct credentials
     Given url baseUrl + loginPath
     * def loginPayload = { username: validEmail, password: validPassword }
     And request loginPayload
@@ -109,9 +94,6 @@ Feature: Demoblaze API - Signup and Login Testing
     * print 'Token: ' + token3
     * print '═══════════════════════════════════════\n'
 
-  # ============================================================
-  # CASO 4: Login con usuario y password incorrecto
-  # ============================================================
   @login @invalid-credentials @critical
   Scenario: CASO 4 - Login con credenciales inválidas
     * def invalidEmail = 'nonexistent' + java.lang.System.currentTimeMillis() + '@test.com'
